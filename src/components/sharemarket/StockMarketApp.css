@@ -1,0 +1,45 @@
+/* src/StockMarketApp.css */
+
+.stock-app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .stock-app-header {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .input-section {
+    margin-bottom: 20px;
+  }
+  
+  .input-section label {
+    font-weight: bold;
+  }
+  
+  .input-section input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .data-section {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 20px;
+  }
+  
+  .data-section div {
+    margin-bottom: 10px;
+  }
+  
+  .data-section p {
+    margin: 0;
+  }
+  

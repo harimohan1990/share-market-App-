@@ -2,43 +2,65 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import './StockMarketApp.css'
 const StockMarketApp = () => {
-  const [symbol, setSymbol] = useState('AAPL'); // Default stock symbol is AAPL
-  const [stockData, setStockData] = useState(null);
+  const [symbol, setSymbol] = useState('AAPL');
+  const [stockData, setStockData] = useState([]);
 
   useEffect(() => {
-    const apiKey = 'WA71OD0SUMQLQV08'; // Replace with your Alpha Vantage API key
-    const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apiKey}`;
+    const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=IBM&apikey=demo`;
 
-    axios.get(apiUrl)
-      .then(response => {
-        setStockData(response.data['Time Series (5min)']);
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        // Assuming the data is nested under 'Monthly Time Series'
+        const timeSeriesData = response.data['Monthly Time Series'];
+        const dataPoints = [];
+
+        for (const date in timeSeriesData) {
+          if (timeSeriesData.hasOwnProperty(date)) {
+            const data = timeSeriesData[date];
+            dataPoints.push({ date, ...data });
+          }
+        }
+
+        setStockData(dataPoints);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching data:', error);
       });
   }, [symbol]);
 
   return (
-    <div>
-      <h1>Stock Market App</h1>
+    <div className="stock-app-container">
+    <h1 className="stock-app-header">Stock Market App</h1>
+    <div className="input-section">
       <label htmlFor="symbol">Stock Symbol:</label>
       <input
         type="text"
         id="symbol"
         value={symbol}
-        onChange={e => setSymbol(e.target.value)}
+        onChange={(e) => setSymbol(e.target.value)}
       />
-      {stockData ? (
-        <div>
-          <h2>Stock Data for {symbol}</h2>
-          <pre>{JSON.stringify(stockData, null, 2)}</pre>
-        </div>
-      ) : (
-        <p>Loading stock data...</p>
-      )}
     </div>
+    {stockData.length > 0 ? (
+      <div className="data-section">
+        {stockData.map((dataPoint, index) => (
+          <div key={index}>
+            <p>Date: {dataPoint.date}</p>
+            <p>Open: {dataPoint['1. open']}</p>
+            <p>High: {dataPoint['2. high']}</p>
+            <p>Low: {dataPoint['3. low']}</p>
+            <p>Close: {dataPoint['4. close']}</p>
+            <p>Volume: {dataPoint['5. volume']}</p>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>Loading stock data...</p>
+    )}
+  </div>
+  
   );
 };
 
